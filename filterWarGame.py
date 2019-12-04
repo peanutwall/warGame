@@ -29,9 +29,9 @@ class PrintPreface:
 
         fontPreface = pygame.font.SysFont('microsoft Yahei', 30)
         preface = fontPreface.render('Game Introduction', True, BLACK)
-        self.screen.blit(preface, (self.length / 2 - 80, self.width / 5))
+        self.screen.blit(preface, (self.length / 2 - 80, self.width / 5 - 50))
         preface2 = fontPreface.render('This area to put some guidance for subjects', True, BLACK)
-        self.screen.blit(preface2, (self.length / 2 - 170, self.width / 5 + 30))
+        self.screen.blit(preface2, (self.length / 2 - 170, self.width / 5 - 20))
         # preface3 = fontPreface.render('This area is reserved for subjects to play the game', True, BLACK)
         # self.screen.blit(preface3, (self.length / 2 - 200, 2 * self.width / 3))
         return self.screen
@@ -215,11 +215,11 @@ class Warnings:
     def __call__(self, warningA, warningB):
         fontPreface = pygame.font.SysFont('microsoft Yahei', 30)
         if warningA == 1:
-            warningForA = fontPreface.render('Policy of player A exceeds the limit', True, BLACK)
-            self.screen.blit(warningForA, (self.length / 2 - 150, 2.5 * self.width / 3))
+            warningForA = fontPreface.render('Policy of player A exceeds the limit', True, RED)
+            self.screen.blit(warningForA, (self.length / 2 - 150, 0.8 * self.width / 3))
         if warningB == 1:
-            warningForB = fontPreface.render('Policy of player B exceeds the limit', True, BLACK)
-            self.screen.blit(warningForB, (self.length / 2 - 150, 2.5 * self.width / 3 + 50))
+            warningForB = fontPreface.render('Policy of player B exceeds the limit', True, RED)
+            self.screen.blit(warningForB, (self.length / 2 - 150, 0.8 * self.width / 3 + 50))
 
         return self.screen
 
