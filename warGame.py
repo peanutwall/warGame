@@ -20,6 +20,7 @@ radius = 25
 landList = list(range(-mapSize, mapSize+1, 1))
 soldiersA = 30
 soldiersB = 30
+soldierFromBase = 20
 backgroundColor = (255, 250, 240)
 screenSize = (length, width)
 BLACK = (0, 0, 0)
@@ -41,6 +42,7 @@ drawWarField = DrawWarField(screen, length, width)
 drawPolicyA = DrawPolicyA(screen, length, width)
 drawPolicyB = DrawPolicyB(screen, length, width)
 drawLastRun = DrawLastRun(screen, length, width)
+drawSoldiersGained = DrawSoldiersGained(screen, length, width)
 warning = Warnings(screen, length, width)
 drawRemainingSoldiers = DrawRemainingSoldiers(screen, length, width)
 # printPreface(screen, length, width)
@@ -58,6 +60,7 @@ policyB = [0 for i in range(mapSize * 2 - isEven - 1)]
 warField = [0 for i in range(mapSize * 2 - isEven - 1)]
 remainingSoldiersA = [0 for i in range(mapSize * 2 - isEven - 1)]
 remainingSoldiersB = [0 for i in range(mapSize * 2 - isEven - 1)]
+soldiersGained = [0 for i in range(mapSize * 2 - isEven - 1)]
 tempList = []
 showFormer = 0
 formerPolicyA = []
@@ -68,6 +71,8 @@ while True:
     screen.fill(backgroundColor)
     printPreface()
     fontAnnotations = pygame.font.SysFont('Times New Roman', 20)
+    showSoldierFromBase = fontAnnotations.render('soldiers from base: ' + str(int(soldierFromBase)), True, BLACK)
+    screen.blit(showSoldierFromBase, (length/2 - 70, width/2 - 150))
     drawBases(mapSize, cubeWidth, isSymmetrical, isEven, baseLocationRandom, soldiersA, soldiersB)
     drawWarField(warField, mapSize, cubeWidth, isEven, typingPositionA, typingPositionB)
     drawCubes(mapSize, isEven, cubeWidth, isBoundary)
@@ -77,6 +82,7 @@ while True:
     if showPolicyB:
         drawPolicyB(policyB, mapSize, cubeWidth, isEven)
     drawRemainingSoldiers(remainingSoldiersA, remainingSoldiersB, mapSize, cubeWidth, isEven)
+    drawSoldiersGained(soldiersGained, warField, mapSize, cubeWidth, isEven)
     warning(warningA, warningB)
     positionListA = generatePositionListA(length, width, mapSize, isEven, cubeWidth)
     positionListB = generatePositionListB(length, width, mapSize, isEven, cubeWidth)
@@ -90,8 +96,10 @@ while True:
             typingPositionB = detectPosition(pos, positionListB)
             if typingPositionA != -1:
                 isTypingA = 1
+                isTypingB = 0
             if typingPositionB != -1:
                 isTypingB = 1
+                isTypingA = 0
         if event.type == pygame.KEYDOWN and isTypingA:
             if 48 <= event.key <= 57:
                 tempList.append(transformKeyToInt(event.key))
@@ -115,7 +123,7 @@ while True:
                     warField = judgeResult(policyA, policyB, remainingSoldiersA, remainingSoldiersB)
                     [remainingSoldiersA, remainingSoldiersB] = \
                         calculateRemainingSoldiers(policyA, policyB, remainingSoldiersA, remainingSoldiersB)
-                    [soldiersA, soldiersB] = calculateSoldiers(warField)
+                    [soldiersA, soldiersB, soldiersGained] = calculateSoldiers(warField, soldierFromBase)
                     formerPolicyA = policyA
                     formerPolicyB = policyB
                     showPolicyA = 1
