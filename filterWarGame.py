@@ -175,12 +175,32 @@ class DrawRemainingSoldiers:
         self.width = width
 
     def __call__(self, remainingSoldiersA, remainingSoldiersB, mapSize, cubeWidth, isEven):
-        fontAnnotations = pygame.font.SysFont('Times New Roman', 30)
+        fontAnnotations = pygame.font.SysFont('Times New Roman', 20)
         for i in range((mapSize * 2 - isEven - 1)):
-            fontRemainingSoldiers = fontAnnotations.render(str(max(remainingSoldiersA[i], remainingSoldiersB[i])), True, GREEN)
-            self.screen.blit(fontRemainingSoldiers, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1)+2,
-                                                     self.width / 2 - cubeWidth+2))
+            fontRemainingSoldiersA = fontAnnotations.render(str(remainingSoldiersA[i]), True, GREEN)
+            self.screen.blit(fontRemainingSoldiersA, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1)+2,
+                                                     self.width / 2 - cubeWidth))
+            fontRemainingSoldiersB = fontAnnotations.render(str(remainingSoldiersB[i]), True, GREEN)
+            self.screen.blit(fontRemainingSoldiersB, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1) + cubeWidth - 13,
+                                                     self.width / 2 - 20))
         return self.screen
+
+
+class DrawSoldiersGained:
+
+    def __init__(self, screen, length, width):
+        self.screen = screen
+        self.length = length
+        self.width = width
+
+    def __call__(self, soldiersGained, warfield, mapSize, cubeWidth, isEven):
+        fontAnnotations = pygame.font.SysFont('Times New Roman', 20)
+        for i in range((mapSize * 2 - isEven - 1)):
+            fontSoldiersGained = fontAnnotations.render('+'+str(soldiersGained[i]), True, colorList[warfield[i]])
+            self.screen.blit(fontSoldiersGained, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1) + cubeWidth/2 - 10,
+                                                      self.width / 2 - 1.6*cubeWidth))
+        return self.screen
+
 
 
 class DrawLastRun:
@@ -257,7 +277,7 @@ def transformTempListToInt(tempList):
 def judgeResult(policyA, policyB, remainingSoldiersA, remainingSoldiersB):
     warField = [0 for i in range(len(policyA))]
     for i in range(len(warField)):
-        if policyA[i] + remainingSoldiersA[i] >= policyB[i] + remainingSoldiersB[i]:
+        if policyA[i] + remainingSoldiersA[i] > policyB[i] + remainingSoldiersB[i]:
             warField[i] = 1
         elif policyA[i] + remainingSoldiersA[i] < policyB[i] + remainingSoldiersB[i]:
             warField[i] = 2
@@ -285,14 +305,16 @@ def calculateRemainingSoldiers(policyA, policyB, remainingSoldiersA, remainingSo
         remainingSoldiersNewB[i] = int((max(0, policyB[i] + remainingSoldiersB[i] - policyA[i] - remainingSoldiersA[i])) * ((i + 1) / (len(policyA) + 1)))
     return [remainingSoldiersNewA, remainingSoldiersNewB]
 
-def  calculateSoldiers(warField):
-    soldierFromBase = 20
+def  calculateSoldiers(warField, soldierFromBase):
     soldierFromWarField = 10
     soldiersA = 0
     soldiersB = 0
+    soldiersGained = [0 for i in range(len(warField))]
     for i in range(len(warField)):
         soldiersA = soldiersA + int((warField[i] == 1) * (1 - (i + 1) / (len(warField) + 1)) * soldierFromWarField)
         soldiersB = soldiersB + int((warField[i] == 2) * ((i + 1) / (len(warField) + 1)) * soldierFromWarField)
+        soldiersGained[i] = max(int((warField[i] == 1) * (1 - (i + 1) / (len(warField) + 1)) * soldierFromWarField),
+                                int((warField[i] == 2) * ((i + 1) / (len(warField) + 1)) * soldierFromWarField))
     soldiersA += soldierFromBase
     soldiersB += soldierFromBase
-    return [soldiersA, soldiersB]
+    return [soldiersA, soldiersB, soldiersGained]
