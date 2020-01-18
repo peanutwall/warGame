@@ -10,7 +10,7 @@ from filterWarGame import *
 mapSize = 3
 isBoundary = 1
 isEven = 0
-isSymmetrical = 1
+isSymmetrical = 0
 
 baseLocationRandom = random.randint(1, mapSize)
 width = 600
@@ -74,18 +74,18 @@ while True:
     showSoldierFromBase = fontAnnotations.render('soldiers from base: ' + str(int(soldierFromBase)), True, BLACK)
     screen.blit(showSoldierFromBase, (length/2 - 70, width/2 - 150))
     drawBases(mapSize, cubeWidth, isSymmetrical, isEven, baseLocationRandom, soldiersA, soldiersB)
-    drawWarField(warField, mapSize, cubeWidth, isEven, typingPositionA, typingPositionB)
+    drawWarField(warField, mapSize, cubeWidth, isEven, typingPositionA, typingPositionB, isSymmetrical, baseLocationRandom)
     drawCubes(mapSize, isEven, cubeWidth, isBoundary)
-    drawLastRun(formerPolicyA, formerPolicyB, mapSize, cubeWidth, isEven)
+    drawLastRun(formerPolicyA, formerPolicyB, mapSize, cubeWidth, isEven, isSymmetrical, baseLocationRandom)
     if showPolicyA:
-        drawPolicyA(policyA, mapSize, cubeWidth, isEven)
+        drawPolicyA(policyA, mapSize, cubeWidth, isEven, isSymmetrical, baseLocationRandom)
     if showPolicyB:
-        drawPolicyB(policyB, mapSize, cubeWidth, isEven)
-    drawRemainingSoldiers(remainingSoldiersA, remainingSoldiersB, mapSize, cubeWidth, isEven)
-    drawSoldiersGained(soldiersGained, warField, mapSize, cubeWidth, isEven)
+        drawPolicyB(policyB, mapSize, cubeWidth, isEven, isSymmetrical, baseLocationRandom)
+    drawRemainingSoldiers(remainingSoldiersA, remainingSoldiersB, mapSize, cubeWidth, isEven, isSymmetrical, baseLocationRandom)
+    drawSoldiersGained(soldiersGained, warField, mapSize, cubeWidth, isEven, isSymmetrical, baseLocationRandom)
     warning(warningA, warningB)
-    positionListA = generatePositionListA(length, width, mapSize, isEven, cubeWidth)
-    positionListB = generatePositionListB(length, width, mapSize, isEven, cubeWidth)
+    positionListA = generatePositionListA(length, width, mapSize, isEven, cubeWidth, isSymmetrical, baseLocationRandom)
+    positionListB = generatePositionListB(length, width, mapSize, isEven, cubeWidth, isSymmetrical, baseLocationRandom)
     for event in pygame.event.get():
         if event.type == QUIT:
             exit()
@@ -122,8 +122,9 @@ while True:
                 if warningA == 0 and warningB == 0:
                     warField = judgeResult(policyA, policyB, remainingSoldiersA, remainingSoldiersB)
                     [remainingSoldiersA, remainingSoldiersB] = \
-                        calculateRemainingSoldiers(policyA, policyB, remainingSoldiersA, remainingSoldiersB)
-                    [soldiersA, soldiersB, soldiersGained] = calculateSoldiers(warField, soldierFromBase)
+                        calculateRemainingSoldiers(policyA, policyB, remainingSoldiersA, remainingSoldiersB, baseLocationRandom)
+                    [soldiersA, soldiersB, soldiersGained] = \
+                        calculateSoldiers(warField, soldierFromBase, soldiersA - sum(policyA), soldiersB - sum(policyB), baseLocationRandom)
                     formerPolicyA = policyA
                     formerPolicyB = policyB
                     showPolicyA = 1

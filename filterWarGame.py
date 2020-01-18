@@ -117,24 +117,51 @@ class DrawWarField:
         self.length = length
         self.width = width
 
-    def __call__(self, warField, mapSize, cubeWidth, isEven, typingPositionA, typingPositionB):
-        for i in range(mapSize * 2 - isEven - 1):
-            pygame.draw.rect(self.screen, colorList[warField[i]], (
-            self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1)+2, self.width / 2 - cubeWidth+2, cubeWidth-4,
-            cubeWidth-4), 0)
-        for i in range(mapSize * 2 - isEven - 1):
-            if typingPositionA == i:
-                pygame.draw.circle(self.screen, GREEN, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i+1)),
-                                                   int(self.width / 2 - cubeWidth / 2 + 2*cubeWidth)), radius)
-            else:
-                pygame.draw.circle(self.screen, BLUE,
-                                   (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)),int(self.width / 2 - cubeWidth / 2 + 2 * cubeWidth)), radius)
-            if typingPositionB == i:
-                pygame.draw.circle(self.screen, GREEN, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i+1)),
-                                    int(self.width / 2 - cubeWidth / 2 + 3*cubeWidth)), radius)
-            else:
-                pygame.draw.circle(self.screen, RED, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)),
-                                                       int(self.width / 2 - cubeWidth / 2 + 3 * cubeWidth)), radius)
+    def __call__(self, warField, mapSize, cubeWidth, isEven, typingPositionA, typingPositionB, isSymmetrical, baseLocationRandom):
+        if isSymmetrical:
+            for i in range(mapSize * 2 - isEven - 1):
+                pygame.draw.rect(self.screen, colorList[warField[i]], (
+                self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1)+2, self.width / 2 - cubeWidth+2, cubeWidth-4,
+                cubeWidth-4), 0)
+            for i in range(mapSize * 2 - isEven - 1):
+                if typingPositionA == i:
+                    pygame.draw.circle(self.screen, GREEN, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i+1)),
+                                                       int(self.width / 2 - cubeWidth / 2 + 2*cubeWidth)), radius)
+                else:
+                    pygame.draw.circle(self.screen, BLUE,
+                                       (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)),int(self.width / 2 - cubeWidth / 2 + 2 * cubeWidth)), radius)
+                if typingPositionB == i:
+                    pygame.draw.circle(self.screen, GREEN, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i+1)),
+                                        int(self.width / 2 - cubeWidth / 2 + 3*cubeWidth)), radius)
+                else:
+                    pygame.draw.circle(self.screen, RED, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)),
+                                                           int(self.width / 2 - cubeWidth / 2 + 3 * cubeWidth)), radius)
+        else:
+            j = 0
+            for i in range(mapSize * 2 - isEven - 1):
+                if i == mapSize * 2 - isEven - 1 - baseLocationRandom:
+                    j = j + 1
+                pygame.draw.rect(self.screen, colorList[warField[i]], (
+                self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (j+1)+2, self.width / 2 - cubeWidth+2, cubeWidth-4,
+                cubeWidth-4), 0)
+                j = j + 1
+            j = 0
+            for i in range(mapSize * 2 - isEven - 1):
+                if i == mapSize * 2 - isEven - 1 - baseLocationRandom:
+                    j = j + 1
+                if typingPositionA == i:
+                    pygame.draw.circle(self.screen, GREEN, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (j+1)),
+                                                       int(self.width / 2 - cubeWidth / 2 + 2*cubeWidth)), radius)
+                else:
+                    pygame.draw.circle(self.screen, BLUE,
+                                       (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (j + 1)),int(self.width / 2 - cubeWidth / 2 + 2 * cubeWidth)), radius)
+                if typingPositionB == i:
+                    pygame.draw.circle(self.screen, GREEN, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (j+1)),
+                                        int(self.width / 2 - cubeWidth / 2 + 3*cubeWidth)), radius)
+                else:
+                    pygame.draw.circle(self.screen, RED, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (j + 1)),
+                                                           int(self.width / 2 - cubeWidth / 2 + 3 * cubeWidth)), radius)
+                j = j + 1
 
 
 class DrawPolicyA:
@@ -144,12 +171,23 @@ class DrawPolicyA:
         self.length = length
         self.width = width
 
-    def __call__(self, policyA, mapSize, cubeWidth ,isEven):
+    def __call__(self, policyA, mapSize, cubeWidth ,isEven, isSymmetrical, baseLocationRandom):
         fontAnnotations = pygame.font.SysFont('Times New Roman', 20)
-        for i in range((mapSize * 2 - isEven - 1)):
-            policyFont = fontAnnotations.render(str(policyA[i]), True, WHITE)
-            self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)-8),
-                                          int(self.width / 2 - cubeWidth / 2 + 2*cubeWidth)-8))
+        if isSymmetrical:
+            for i in range((mapSize * 2 - isEven - 1)):
+                policyFont = fontAnnotations.render(str(policyA[i]), True, WHITE)
+                self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)-8),
+                                              int(self.width / 2 - cubeWidth / 2 + 2*cubeWidth)-8))
+        else:
+            j = 0
+            for i in range((mapSize * 2 - isEven - 1)):
+                if i == mapSize * 2 - isEven - 1 - baseLocationRandom:
+                    j = j + 1
+                policyFont = fontAnnotations.render(str(policyA[i]), True, WHITE)
+                self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (j + 1)-8),
+                                              int(self.width / 2 - cubeWidth / 2 + 2*cubeWidth)-8))
+                j = j + 1
+
 
 
 class DrawPolicyB:
@@ -159,12 +197,22 @@ class DrawPolicyB:
         self.length = length
         self.width = width
 
-    def __call__(self, policyB, mapSize, cubeWidth ,isEven):
+    def __call__(self, policyB, mapSize, cubeWidth ,isEven, isSymmetrical, baseLocationRandom):
         fontAnnotations = pygame.font.SysFont('Times New Roman', 20)
-        for i in range((mapSize * 2 - isEven - 1)):
-            policyFont = fontAnnotations.render(str(policyB[i]), True, WHITE)
-            self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)-8),
-                                          int(self.width / 2 - cubeWidth / 2 + 3 * cubeWidth)-8))
+        if isSymmetrical:
+            for i in range((mapSize * 2 - isEven - 1)):
+                policyFont = fontAnnotations.render(str(policyB[i]), True, WHITE)
+                self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)-8),
+                                              int(self.width / 2 - cubeWidth / 2 + 3 * cubeWidth)-8))
+        else:
+            j = 0
+            for i in range((mapSize * 2 - isEven - 1)):
+                if i == mapSize * 2 - isEven - 1 - baseLocationRandom:
+                    j = j + 1
+                policyFont = fontAnnotations.render(str(policyB[i]), True, WHITE)
+                self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (j + 1)-8),
+                                              int(self.width / 2 - cubeWidth / 2 + 3 * cubeWidth)-8))
+                j = j + 1
 
 
 class DrawRemainingSoldiers:
@@ -174,15 +222,29 @@ class DrawRemainingSoldiers:
         self.length = length
         self.width = width
 
-    def __call__(self, remainingSoldiersA, remainingSoldiersB, mapSize, cubeWidth, isEven):
+    def __call__(self, remainingSoldiersA, remainingSoldiersB, mapSize, cubeWidth, isEven, isSymmetrical, baseLocationRandom):
         fontAnnotations = pygame.font.SysFont('Times New Roman', 20)
-        for i in range((mapSize * 2 - isEven - 1)):
-            fontRemainingSoldiersA = fontAnnotations.render(str(remainingSoldiersA[i]), True, GREEN)
-            self.screen.blit(fontRemainingSoldiersA, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1)+2,
-                                                     self.width / 2 - cubeWidth))
-            fontRemainingSoldiersB = fontAnnotations.render(str(remainingSoldiersB[i]), True, GREEN)
-            self.screen.blit(fontRemainingSoldiersB, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1) + cubeWidth - 13,
-                                                     self.width / 2 - 20))
+        if isSymmetrical:
+            for i in range((mapSize * 2 - isEven - 1)):
+                fontRemainingSoldiersA = fontAnnotations.render(str(remainingSoldiersA[i]), True, GREEN)
+                self.screen.blit(fontRemainingSoldiersA, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1)+2,
+                                                         self.width / 2 - cubeWidth))
+                fontRemainingSoldiersB = fontAnnotations.render(str(remainingSoldiersB[i]), True, GREEN)
+                self.screen.blit(fontRemainingSoldiersB, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1) + cubeWidth - 13,
+                                                         self.width / 2 - 20))
+        else:
+            j = 0
+            for i in range((mapSize * 2 - isEven - 1)):
+                if i == mapSize * 2 - isEven - 1 - baseLocationRandom:
+                    j = j + 1
+                fontRemainingSoldiersA = fontAnnotations.render(str(remainingSoldiersA[i]), True, GREEN)
+                self.screen.blit(fontRemainingSoldiersA, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (j+1)+2,
+                                                         self.width / 2 - cubeWidth))
+                fontRemainingSoldiersB = fontAnnotations.render(str(remainingSoldiersB[i]), True, GREEN)
+                self.screen.blit(fontRemainingSoldiersB, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (j+1) + cubeWidth - 13,
+                                                         self.width / 2 - 20))
+                j = j + 1
+
         return self.screen
 
 
@@ -193,12 +255,24 @@ class DrawSoldiersGained:
         self.length = length
         self.width = width
 
-    def __call__(self, soldiersGained, warfield, mapSize, cubeWidth, isEven):
+    def __call__(self, soldiersGained, warfield, mapSize, cubeWidth, isEven, isSymmetrical, baseLocationRandom):
         fontAnnotations = pygame.font.SysFont('Times New Roman', 20)
-        for i in range((mapSize * 2 - isEven - 1)):
-            fontSoldiersGained = fontAnnotations.render('+'+str(soldiersGained[i]), True, colorList[warfield[i]])
-            self.screen.blit(fontSoldiersGained, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1) + cubeWidth/2 - 10,
-                                                      self.width / 2 - 1.6*cubeWidth))
+        if isSymmetrical:
+            for i in range((mapSize * 2 - isEven - 1)):
+                fontSoldiersGained = fontAnnotations.render('+'+str(soldiersGained[i]), True, colorList[warfield[i]])
+                self.screen.blit(fontSoldiersGained, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (i+1) + cubeWidth/2 - 10,
+                                                          self.width / 2 - 1.6*cubeWidth))
+        else:
+            j = 0
+            for i in range((mapSize * 2 - isEven - 1)):
+                if i == mapSize * 2 - isEven - 1 - baseLocationRandom:
+                    j = j + 1
+                fontSoldiersGained = fontAnnotations.render('+'+str(soldiersGained[i]), True, colorList[warfield[i]])
+                self.screen.blit(fontSoldiersGained, (self.length / 2 - mapSize * cubeWidth - cubeWidth / 2 + cubeWidth * (j+1) + cubeWidth/2 - 10,
+                                                          self.width / 2 - 1.6*cubeWidth))
+                j = j + 1
+
+
         return self.screen
 
 
@@ -210,19 +284,34 @@ class DrawLastRun:
         self.length = length
         self.width = width
 
-    def __call__(self, formerPolicyA, formerPolicyB, mapSize, cubeWidth ,isEven):
+    def __call__(self, formerPolicyA, formerPolicyB, mapSize, cubeWidth ,isEven, isSymmetrical, baseLocationRandom):
         fontAnnotations = pygame.font.SysFont('Times New Roman', 20)
-
-        for i in range((len(formerPolicyB))):
-            policyFont = fontAnnotations.render('Last Run:', True, BLACK)
-            self.screen.blit(policyFont,(int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (len(formerPolicyB) / 2) - 8),
-                              int(self.width / 2 - cubeWidth / 2 + 3.8 * cubeWidth) - 8))
-            policyFont = fontAnnotations.render(str(formerPolicyA[i]), True, BLUE)
-            self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)-8),
-                                          int(self.width / 2 - cubeWidth / 2 + 4.3 * cubeWidth)-8))
-            policyFont = fontAnnotations.render(str(formerPolicyB[i]), True, RED)
-            self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)-8),
-                                          int(self.width / 2 - cubeWidth / 2 + 4.8 * cubeWidth)-8))
+        if isSymmetrical:
+            for i in range((len(formerPolicyB))):
+                policyFont = fontAnnotations.render('Last Run:', True, BLACK)
+                self.screen.blit(policyFont,(int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (len(formerPolicyB) / 2) - 8),
+                                  int(self.width / 2 - cubeWidth / 2 + 3.8 * cubeWidth) - 8))
+                policyFont = fontAnnotations.render(str(formerPolicyA[i]), True, BLUE)
+                self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)-8),
+                                              int(self.width / 2 - cubeWidth / 2 + 4.3 * cubeWidth)-8))
+                policyFont = fontAnnotations.render(str(formerPolicyB[i]), True, RED)
+                self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (i + 1)-8),
+                                              int(self.width / 2 - cubeWidth / 2 + 4.8 * cubeWidth)-8))
+        else:
+            j = 0
+            for i in range((len(formerPolicyB))):
+                if i == mapSize * 2 - isEven - 1 - baseLocationRandom:
+                    j = j + 1
+                policyFont = fontAnnotations.render('Last Run:', True, BLACK)
+                self.screen.blit(policyFont,(int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (len(formerPolicyB) / 2) - 8),
+                                  int(self.width / 2 - cubeWidth / 2 + 3.8 * cubeWidth) - 8))
+                policyFont = fontAnnotations.render(str(formerPolicyA[i]), True, BLUE)
+                self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (j + 1)-8),
+                                              int(self.width / 2 - cubeWidth / 2 + 4.3 * cubeWidth)-8))
+                policyFont = fontAnnotations.render(str(formerPolicyB[i]), True, RED)
+                self.screen.blit(policyFont, (int(self.length / 2 - mapSize * cubeWidth + cubeWidth * (j + 1)-8),
+                                              int(self.width / 2 - cubeWidth / 2 + 4.8 * cubeWidth)-8))
+                j = j + 1
 
 
 class Warnings:
@@ -246,16 +335,35 @@ class Warnings:
 
 
 
-def generatePositionListA(length, width, mapSize, isEven, cubeWidth):
+def generatePositionListA(length, width, mapSize, isEven, cubeWidth, isSymmetrical, baseLocationRandom):
     positionList = []
-    for i in range(mapSize * 2 - isEven - 1):
-        positionList.append((int(length / 2 - mapSize * cubeWidth + cubeWidth * (i+1)), int(width / 2 - cubeWidth / 2 + 2*cubeWidth)))
-    return  positionList
+    if isSymmetrical:
+        for i in range(mapSize * 2 - isEven - 1):
+            positionList.append((int(length / 2 - mapSize * cubeWidth + cubeWidth * (i+1)), int(width / 2 - cubeWidth / 2 + 2*cubeWidth)))
+    else:
+        j = 0
+        for i in range(mapSize * 2 - isEven - 1):
+            if i == mapSize * 2 - isEven - 1 - baseLocationRandom:
+                j = j + 1
+            positionList.append((int(length / 2 - mapSize * cubeWidth + cubeWidth * (j+1)), int(width / 2 - cubeWidth / 2 + 2*cubeWidth)))
+            j = j + 1
 
-def generatePositionListB(length, width, mapSize, isEven, cubeWidth):
+    return positionList
+
+
+def generatePositionListB(length, width, mapSize, isEven, cubeWidth, isSymmetrical, baseLocationRandom):
     positionList = []
-    for i in range(mapSize * 2 - isEven - 1):
-        positionList.append((int(length / 2 - mapSize * cubeWidth + cubeWidth * (i+1)), int(width / 2 - cubeWidth / 2 + 3*cubeWidth)))
+    if isSymmetrical:
+        for i in range(mapSize * 2 - isEven - 1):
+            positionList.append((int(length / 2 - mapSize * cubeWidth + cubeWidth * (i+1)), int(width / 2 - cubeWidth / 2 + 3*cubeWidth)))
+    else:
+        j = 0
+        for i in range(mapSize * 2 - isEven - 1):
+            if i == mapSize * 2 - isEven - 1 - baseLocationRandom:
+                j = j + 1
+            positionList.append((int(length / 2 - mapSize * cubeWidth + cubeWidth * (j+1)), int(width / 2 - cubeWidth / 2 + 3*cubeWidth)))
+            j = j + 1
+
     return positionList
 
 def detectPosition(pos, positionList):
@@ -297,7 +405,7 @@ def checkPolicy(policyA, policyB, soldiersA, soldiersB):
 
     return [warningA, warningB]
 
-def calculateRemainingSoldiers(policyA, policyB, remainingSoldiersA, remainingSoldiersB):
+def calculateRemainingSoldiers(policyA, policyB, remainingSoldiersA, remainingSoldiersB, baseLocationRandom):
     remainingSoldiersNewA = [0 for i in range(len(policyA))]
     remainingSoldiersNewB = [0 for i in range(len(policyA))]
     for i in range(len(policyA)):
@@ -305,10 +413,8 @@ def calculateRemainingSoldiers(policyA, policyB, remainingSoldiersA, remainingSo
         remainingSoldiersNewB[i] = int((max(0, policyB[i] + remainingSoldiersB[i] - policyA[i] - remainingSoldiersA[i])) * ((i + 1) / (len(policyA) + 1)))
     return [remainingSoldiersNewA, remainingSoldiersNewB]
 
-def  calculateSoldiers(warField, soldierFromBase):
+def  calculateSoldiers(warField, soldierFromBase, soldiersA, soldiersB, baseLocationRandom):
     soldierFromWarField = 10
-    soldiersA = 0
-    soldiersB = 0
     soldiersGained = [0 for i in range(len(warField))]
     for i in range(len(warField)):
         soldiersA = soldiersA + int((warField[i] == 1) * (1 - (i + 1) / (len(warField) + 1)) * soldierFromWarField)
